@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScreenVoiceRec — User Guide / Guide d’utilisation</title>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --border: #d2d2d7;
+      --accent: #0071e3;
+      --s1: #e53935;
+      --s2: #fb8c00;
+      --s3: #43a047;
+      --s4: #8e24aa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 32px 20px 64px; }
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.06);
+    }
+    .hero img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    /* 图片框：在 Google Sites 嵌入时，把 src 改成你上传后的 HTTPS 图片地址 */
+    .image-frame {
+      margin: 0;
+      padding: 12px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      background: #fafafa;
+      text-align: center;
+    }
+    .image-frame.has-image {
+      border-style: solid;
+      background: transparent;
+      padding: 0;
+    }
+    .image-frame img {
+      margin: 0 auto;
+    }
+    .image-frame-caption {
+      margin: 10px 0 0;
+      font-size: .82rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .image-frame-placeholder {
+      margin: 0;
+      padding: 40px 16px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .image-frame-placeholder code {
+      background: #eee;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: .85em;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-top: 16px;
+      font-size: .92rem;
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    nav.toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
+    nav.toc h2 { margin: 0 0 10px; font-size: 1rem; }
+    nav.toc ol { margin: 0; padding-left: 20px; }
+    nav.toc a { color: var(--accent); text-decoration: none; }
+    nav.toc a:hover { text-decoration: underline; }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 22px 18px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 14px rgba(0,0,0,.04);
+    }
+    .badge {
+      display: inline-block;
+      color: #fff;
+      font-weight: 700;
+      font-size: .85rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .b1 { background: var(--s1); }
+    .b2 { background: var(--s2); }
+    .b3 { background: var(--s3); }
+    .b4 { background: var(--s4); }
+    .b0 { background: #546e7a; }
+    h2.section-title {
+      margin: 0 0 14px;
+      font-size: 1.35rem;
+    }
+    .lang-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 760px) {
+      .lang-grid { grid-template-columns: 1fr; }
+    }
+    .lang-col h3 {
+      margin: 0 0 8px;
+      font-size: .78rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    ul, ol { margin: 8px 0 0; padding-left: 20px; }
+    li { margin-bottom: 6px; }
+    .tip {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: #f0f7ff;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      font-size: .95rem;
+    }
+    kbd {
+      background: #eee;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: .85em;
+    }
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: 36px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>ScreenVoiceRec</h1>
+      <p>Screen Audio Recorder for macOS &nbsp;|&nbsp; Enregistreur audio d’écran pour macOS</p>
+    </header>
+
+    <div class="hero">
+      <!--
+        手动换图：只需修改下面 <img> 的 src 属性。
+        · 本地预览：assets/screenvoice-ui-screenshot.png
+        · Google Sites：先「插入 → 图片」上传截图，右键图片 →「复制图片地址」，粘贴到 src=""
+      -->
+      <figure class="image-frame has-image">
+        <img
+          id="app-screenshot"
+          src="assets/screenvoice-ui-screenshot.png"
+          alt="ScreenVoiceRec main window with four numbered areas (1 Source, 2 Export Format, 3 Controls, 4 Playback)"
+        >
+        <figcaption class="image-frame-caption">
+          UI overview / Aperçu de l’interface — areas 1–4 match the sections below.
+        </figcaption>
+      </figure>
+      <!-- 若 src 留空，可改用下面这段占位框（去掉上面 figure，取消注释）：
+      <figure class="image-frame">
+        <p class="image-frame-placeholder">
+          Paste your image URL into <code>&lt;img src=""&gt;</code><br>
+          将图片 HTTPS 地址填入 <code>src</code>
+        </p>
+        <img src="" alt="ScreenVoiceRec screenshot">
+      </figure>
+      -->
+      <div class="legend">
+        <span><span class="dot" style="background:var(--s1)"></span> 1 — Source</span>
+        <span><span class="dot" style="background:var(--s2)"></span> 2 — Export Format</span>
+        <span><span class="dot" style="background:var(--s3)"></span> 3 — Controls</span>
+        <span><span class="dot" style="background:var(--s4)"></span> 4 — Playback</span>
+      </div>
+    </div>
+
+    <nav class="toc">
+      <h2>Contents / Table des matières</h2>
+      <ol>
+        <li><a href="#overview">Overview / Aperçu</a></li>
+        <li><a href="#section-1">1 — Source</a></li>
+        <li><a href="#section-2">2 — Export Format</a></li>
+        <li><a href="#save-location">Save Location / Emplacement</a></li>
+        <li><a href="#section-3">3 — Controls</a></li>
+        <li><a href="#section-4">4 — Playback</a></li>
+        <li><a href="#permissions">Permissions</a></li>
+        <li><a href="#quick-start">Quick Start / Démarrage rapide</a></li>
+      </ol>
+    </nav>
+
+    <section id="overview" class="block">
+      <h2 class="section-title">Overview / Aperçu</h2>
+      <div class="lang-grid">
+        <div class="lang-col">
+          <h3>English</h3>
+          <p><strong>ScreenVoiceRec</strong> captures audio on your Mac and saves it as a file you can play back or share. You can record:</p>
+          <ul>
+            <li>System audio from an entire display (desktop audio)</li>
+            <li>Audio from a single application window (e.g. a browser tab playing video)</li>
+            <li>Input from a microphone, headset mic, or line-in (3.5&nbsp;mm jack / USB audio interface)</li>
+          </ul>
+          <p>The main window is divided into four areas (numbered in the screenshot above).</p>
+        </div>
+        <div class="lang-col">
+          <h3>Français</h3>
+          <p><strong>ScreenVoiceRec</strong> capture l’audio sur votre Mac et l’enregistre dans un fichier que vous pouvez écouter ou partager. Vous pouvez enregistrer&nbsp;:</p>
+          <ul>
+            <li>L’audio système d’un écran entier (audio du bureau)</li>
+            <li>L’audio d’une seule fenêtre d’application (p. ex. un onglet de navigateur)</li>
+            <li>L’entrée d’un micro, d’un micro-casque ou d’une entrée ligne (prise 3,5&nbsp;mm / interface USB)</li>
+          </ul>
+          <p>La fenêtre principale comporte quatre zones (numérotées sur la capture d’écran ci-dessus).</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-1" class="block">
+      <span class="badge b1">1</span>
+      <h2 class="section-title">Source</h2>
+      <div class="lang-grid">
+        <div class="lang-col">
+          <h3>English</h3>
+          <p>Choose <strong>what</strong> to record.</p>
+          <ol>
+            <li><strong>Source type</strong> (top menu): pick one of
+              <ul>
+                <li><strong>Entire Display (Desktop Audio)</strong> — all system audio on the selected monitor</li>
+                <li><strong>Single Window</strong> — only the audio of one window (shown in the screenshot)</li>
+                <li><strong>3.5 mm Headphone Jack / Line In</strong> — hardware input (mic or line-in)</li>
+              </ul>
+            </li>
+            <li><strong>Second menu</strong> (when applicable): select the target display or window. Window entries show <em>App name — Window title</em> (e.g. <em>Google Chrome — YouTube</em>).</li>
+            <li><strong>Refresh Windows &amp; Displays</strong> — reloads the list after you open, close, or move windows.</li>
+          </ol>
+          <div class="tip"><strong>Tip:</strong> Start playback in the target app <em>before</em> recording so the level meter confirms audio is flowing.</div>
+        </div>
+        <div class="lang-col">
+          <h3>Français</h3>
+          <p>Choisissez <strong>quoi</strong> enregistrer.</p>
+          <ol>
+            <li><strong>Type de source</strong> (menu du haut)&nbsp;:
+              <ul>
+                <li><strong>Écran entier (audio du bureau)</strong> — tout l’audio système de l’écran choisi</li>
+                <li><strong>Fenêtre unique</strong> — uniquement l’audio d’une fenêtre (comme sur la capture)</li>
+                <li><strong>Prise casque 3,5&nbsp;mm / entrée ligne</strong> — entrée matérielle (micro ou ligne)</li>
+              </ul>
+            </li>
+            <li><strong>Deuxième menu</strong> (si applicable)&nbsp;: choisissez l’écran ou la fenêtre cible. Les fenêtres s’affichent sous la forme <em>Nom de l’app — Titre de la fenêtre</em>.</li>
+            <li><strong>Actualiser fenêtres et écrans</strong> — met à jour la liste après ouverture, fermeture ou déplacement de fenêtres.</li>
+          </ol>
+          <div class="tip"><strong>Astuce&nbsp;:</strong> Lancez la lecture dans l’application cible <em>avant</em> d’enregistrer, afin que le niveau d’entrée confirme la présence du signal.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-2" class="block">
+      <span class="badge b2">2</span>
+      <h2 class="section-title">Export Format / Format d’exportation</h2>
+      <div class="lang-grid">
+        <div class="lang-col">
+          <h3>English</h3>
+          <p>Select the file format <strong>before</strong> you start recording. Available formats:</p>
+          <ul>
+            <li><strong>AAC (M4A, lossy)</strong> — small files, good for sharing (default in screenshot)</li>
+            <li><strong>Apple Lossless (M4A, lossless)</strong> — no quality loss, larger than AAC</li>
+            <li><strong>FLAC (CAF container, lossless)</strong> — lossless compression in a Core Audio Format file</li>
+            <li><strong>Linear PCM (WAV, uncompressed)</strong> — maximum compatibility for editing</li>
+          </ul>
+          <p>The extension is chosen automatically (.m4a, .caf, or .wav).</p>
+        </div>
+        <div class="lang-col">
+          <h3>Français</h3>
+          <p>Choisissez le format de fichier <strong>avant</strong> de commencer l’enregistrement. Formats disponibles&nbsp;:</p>
+          <ul>
+            <li><strong>AAC (M4A, avec perte)</strong> — fichiers compacts, pratiques pour le partage</li>
+            <li><strong>Apple Lossless (M4A, sans perte)</strong> — qualité préservée, fichiers plus volumineux</li>
+            <li><strong>FLAC (conteneur CAF, sans perte)</strong> — compression sans perte au format Core Audio</li>
+            <li><strong>PCM linéaire (WAV, non compressé)</strong> — compatibilité maximale pour le montage</li>
+          </ul>
+          <p>L’extension est choisie automatiquement (.m4a, .caf ou .wav).</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="save-location" class="block">
+      <span class="badge b0">★</span>
+      <h2 class="section-title">Save Location / Emplacement d’enregistrement</h2>
+      <div class="lang-grid">
+        <div class="lang-col">
+          <h3>English</h3>
+          <p>Between Export Format and Controls, the app shows where files are saved — inside the app’s sandbox folder under <code>Library/Application Support/</code>. Each recording gets a <strong>timestamped filename</strong>. Use <strong>Open Recordings Folder</strong> (in Playback) to open the folder in Finder.</p>
+        </div>
+        <div class="lang-col">
+          <h3>Français</h3>
+          <p>Entre le format d’exportation et les commandes, l’application indique où les fichiers sont enregistrés — dans le dossier sandbox de l’app, sous <code>Bibliothèque/Application Support/</code>. Chaque enregistrement reçoit un <strong>nom horodaté</strong>. Utilisez <strong>Ouvrir le dossier d’enregistrements</strong> (section Lecture) pour l’ouvrir dans le Finder.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-3" class="block">
+      <span class="badge b3">3</span>
+      <h2 class="section-title">Controls / Commandes</h2>
+      <div class="lang-grid">
+        <div class="lang-col">
+          <h3>English</h3>
+          <p>Manage the active recording session.</p>
+          <ul>
+            <li><strong>Start Recording</strong> (<kbd>⌘</kbd><kbd>R</kbd>) — begins capture after permissions and source setup</li>
+            <li><strong>Pause</strong> / <strong>Resume</strong> — temporarily stops writing audio; elapsed time excludes paused intervals</li>
+            <li><strong>Stop</strong> (<kbd>⌘</kbd><kbd>.</kbd>) — finishes the file and saves it</li>
+          </ul>
+          <p><strong>Status row:</strong> red waveform icon, elapsed time (e.g. 42:58), and <strong>Input level</strong> percentage.</p>
+          <p><strong>Level meter:</strong> horizontal bar showing live audio level (roughly −55&nbsp;dB to 0&nbsp;dB). If the bar stays empty, check the source, volume, and permissions.</p>
+        </div>
+        <div class="lang-col">
+          <h3>Français</h3>
+          <p>Gérez la session d’enregistrement en cours.</p>
+          <ul>
+            <li><strong>Démarrer l’enregistrement</strong> (<kbd>⌘</kbd><kbd>R</kbd>) — démarre la capture après autorisation et configuration de la source</li>
+            <li><strong>Pause</strong> / <strong>Reprendre</strong> — suspend l’écriture audio ; le temps écoulé exclut les pauses</li>
+            <li><strong>Arrêter</strong> (<kbd>⌘</kbd><kbd>.</kbd>) — finalise et enregistre le fichier</li>
+          </ul>
+          <p><strong>Barre d’état&nbsp;:</strong> icône de forme d’onde rouge, durée écoulée (p. ex. 42:58) et pourcentage de <strong>niveau d’entrée</strong>.</p>
+          <p><strong>Indicateur de niveau&nbsp;:</strong> barre horizontale montrant le niveau audio en direct (environ −55&nbsp;dB à 0&nbsp;dB). Si la barre reste vide, vérifiez la source, le volume et les autorisations.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-4" class="block">
+      <span class="badge b4">4</span>
+      <h2 class="section-title">Playback / Lecture</h2>
+      <div class="lang-grid">
+        <div class="lang-col">
+          <h3>English</h3>
+          <p>Listen to recordings and manage files without leaving the app.</p>
+          <ul>
+            <li><strong>Choose File…</strong> — pick any supported audio file on disk</li>
+            <li><strong>Play</strong> (<kbd>⌘</kbd><kbd>↩</kbd>) — start playback</li>
+            <li><strong>Pause</strong> (<kbd>⌘</kbd><kbd>/</kbd>) — pause playback</li>
+            <li><strong>Stop</strong> (<kbd>⇧</kbd><kbd>⌘</kbd><kbd>S</kbd>) — stop and return to the start</li>
+            <li><strong>Play / Continue</strong> (<kbd>Space</kbd>) — toggle play and pause</li>
+            <li><strong>Reveal in Finder</strong> — show the current file in Finder</li>
+            <li><strong>Open Recordings Folder</strong> — open the app’s recordings directory</li>
+            <li><strong>Copy Path</strong> — copy the file path to the clipboard</li>
+          </ul>
+          <p><strong>Playback position</strong> slider — drag to scrub; release to jump to that time. Current and total duration appear on the left and right.</p>
+          <p><strong>Last recording</strong> shows the path of the most recently saved file.</p>
+        </div>
+        <div class="lang-col">
+          <h3>Français</h3>
+          <p>Écoutez vos enregistrements et gérez les fichiers sans quitter l’application.</p>
+          <ul>
+            <li><strong>Choisir un fichier…</strong> — sélectionner un fichier audio pris en charge</li>
+            <li><strong>Lecture</strong> (<kbd>⌘</kbd><kbd>↩</kbd>) — démarrer la lecture</li>
+            <li><strong>Pause</strong> (<kbd>⌘</kbd><kbd>/</kbd>) — mettre en pause</li>
+            <li><strong>Arrêter</strong> (<kbd>⇧</kbd><kbd>⌘</kbd><kbd>S</kbd>) — arrêter et revenir au début</li>
+            <li><strong>Lecture / Continuer</strong> (<kbd>Espace</kbd>) — basculer lecture / pause</li>
+            <li><strong>Afficher dans le Finder</strong> — localiser le fichier actuel</li>
+            <li><strong>Ouvrir le dossier d’enregistrements</strong> — ouvrir le répertoire des enregistrements</li>
+            <li><strong>Copier le chemin</strong> — copier le chemin dans le presse-papiers</li>
+          </ul>
+          <p>Curseur <strong>Position de lecture</strong> — faites glisser pour parcourir ; relâchez pour sauter à ce moment. La durée actuelle et totale s’affichent à gauche et à droite.</p>
+          <p><strong>Dernier enregistrement</strong> affiche le chemin du fichier le plus récent.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="permissions" class="block">
+      <h2 class="section-title">macOS Permissions / Autorisations macOS</h2>
+      <div class="lang-grid">
+        <div class="lang-col">
+          <h3>English</h3>
+          <ul>
+            <li><strong>Screen Recording</strong> — required for display and window capture. Grant in <em>System Settings › Privacy &amp; Security › Screen Recording</em>, then restart the app if prompted.</li>
+            <li><strong>Microphone</strong> — required only for <em>3.5 mm Headphone Jack / Line In</em>. Grant in <em>System Settings › Privacy &amp; Security › Microphone</em>.</li>
+          </ul>
+        </div>
+        <div class="lang-col">
+          <h3>Français</h3>
+          <ul>
+            <li><strong>Enregistrement de l’écran</strong> — requis pour la capture d’écran et de fenêtre. Accordez dans <em>Réglages système › Confidentialité et sécurité › Enregistrement de l’écran</em>, puis relancez l’app si nécessaire.</li>
+            <li><strong>Microphone</strong> — requis uniquement pour <em>Prise casque 3,5&nbsp;mm / entrée ligne</em>. Accordez dans <em>Réglages système › Confidentialité et sécurité › Microphone</em>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="quick-start" class="block">
+      <h2 class="section-title">Quick Start / Démarrage rapide</h2>
+      <div class="lang-grid">
+        <div class="lang-col">
+          <h3>English</h3>
+          <ol>
+            <li>Choose a <strong>source</strong> and target display/window if needed.</li>
+            <li>Pick an <strong>export format</strong>.</li>
+            <li>Click <strong>Start Recording</strong> and confirm the level meter moves.</li>
+            <li>Click <strong>Stop</strong> when finished.</li>
+            <li>Use <strong>Playback</strong> to review, or <strong>Open Recordings Folder</strong> to share the file.</li>
+          </ol>
+        </div>
+        <div class="lang-col">
+          <h3>Français</h3>
+          <ol>
+            <li>Choisissez une <strong>source</strong> et l’écran ou la fenêtre cible si nécessaire.</li>
+            <li>Sélectionnez un <strong>format d’exportation</strong>.</li>
+            <li>Cliquez sur <strong>Démarrer l’enregistrement</strong> et vérifiez que l’indicateur de niveau bouge.</li>
+            <li>Cliquez sur <strong>Arrêter</strong> une fois terminé.</li>
+            <li>Utilisez la section <strong>Lecture</strong> pour réécouter, ou <strong>Ouvrir le dossier d’enregistrements</strong> pour partager le fichier.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      ScreenVoiceRec User Guide &nbsp;·&nbsp; Guide d’utilisation ScreenVoiceRec<br>
+      Minghao Wang &nbsp;·&nbsp; macOS
+    </footer>
+  </div>
+</body>
+</html>
