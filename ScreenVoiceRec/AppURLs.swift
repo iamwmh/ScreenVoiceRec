@@ -12,13 +12,6 @@ enum AppURLs {
 
     static let supportEmail = "iamwmh@gmail.com"
 
-    static var supportMailto: URL {
-        var components = URLComponents()
-        components.scheme = "mailto"
-        components.path = supportEmail
-        components.queryItems = [
-            URLQueryItem(name: "subject", value: "ScreenVoiceRec Support")
-        ]
-        return components.url!
-    }
+    /// 打开系统默认邮件客户端，并预填收件人与主题。
+    static let supportMailto = URL(string: "mailto:\(supportEmail)?subject=ScreenVoiceRec%20Support")!
 }

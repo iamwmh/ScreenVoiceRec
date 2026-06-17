@@ -12,7 +12,6 @@ struct ScreenVoiceRecApp: App {
         WindowGroup {
             ContentView()
         }
-        .defaultSize(width: 560, height: 720)
         .commands {
             CommandGroup(replacing: .help) {
                 Button(L10n.tr("help.menu.guide")) {
@@ -20,6 +19,9 @@ struct ScreenVoiceRecApp: App {
                 }
                 Button(L10n.tr("help.menu.support")) {
                     NSWorkspace.shared.open(AppURLs.support)
+                }
+                Button(L10n.tr("help.menu.email")) {
+                    NSWorkspace.shared.open(AppURLs.supportMailto)
                 }
             }
         }
