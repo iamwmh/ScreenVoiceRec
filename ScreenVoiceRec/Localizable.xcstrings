@@ -3321,16 +3321,6 @@
         "fr-CA": { "stringUnit": { "state": "translated", "value": "Assistance et contact" } },
         "zh-Hans": { "stringUnit": { "state": "translated", "value": "支持与联系" } }
       }
-    },
-    "help.menu.email": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Email Support" } },
-        "en-CA": { "stringUnit": { "state": "translated", "value": "Email Support" } },
-        "fr": { "stringUnit": { "state": "translated", "value": "Assistance par e-mail" } },
-        "fr-CA": { "stringUnit": { "state": "translated", "value": "Assistance par e-mail" } },
-        "zh-Hans": { "stringUnit": { "state": "translated", "value": "发送邮件咨询" } }
-      }
     }
   },
   "version": "1.0"

@@ -20,9 +20,6 @@ struct ScreenVoiceRecApp: App {
                 Button(L10n.tr("help.menu.support")) {
                     NSWorkspace.shared.open(AppURLs.support)
                 }
-                Button(L10n.tr("help.menu.email")) {
-                    NSWorkspace.shared.open(AppURLs.supportMailto)
-                }
             }
         }
     }
