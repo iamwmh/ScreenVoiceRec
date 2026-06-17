@@ -10,61 +10,125 @@ struct ContentView: View {
     @StateObject private var model = ScreenRecorderViewModel()
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(L10n.tr("app.title"))
-                .font(.title2.weight(.semibold))
+        ScrollView(.vertical, showsIndicators: true) {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(L10n.tr("app.title"))
+                    .font(.title2.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
 
-            GroupBox(L10n.tr("source.group")) {
-                VStack(alignment: .leading, spacing: 10) {
-                    Picker(L10n.tr("picker.type"), selection: $model.sourceKind) {
-                        ForEach(CaptureSourceKind.allCases) { k in
-                            Text(k.title).tag(k)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .labelsHidden()
+                sourceSection
+                exportSection
+                saveSection
+                controlSection
+                playbackSection
 
-                    switch model.sourceKind {
-                    case .headphoneJack:
-                        Text(L10n.tr("source.headphone.hint"))
-                            .font(.callout)
+                Text(model.statusMessage)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .textSelection(.enabled)
+            }
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .frame(minWidth: 480, idealWidth: 560, minHeight: 420, idealHeight: 720)
+        .task {
+            await model.refreshShareableContent()
+        }
+    }
+
+    private var sourceSection: some View {
+        GroupBox(L10n.tr("source.group")) {
+            VStack(alignment: .leading, spacing: 10) {
+                sourceTypePicker
+
+                switch model.sourceKind {
+                case .headphoneJack:
+                    Text(L10n.tr("source.headphone.hint"))
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                case .window:
+                    if model.windows.isEmpty {
+                        Text(L10n.tr("source.empty.windows"))
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
-                    case .window:
-                        if model.windows.isEmpty {
-                            Text(L10n.tr("source.empty.windows"))
-                                .foregroundStyle(.secondary)
-                        } else {
-                            Picker(L10n.tr("picker.window"), selection: $model.selectedWindowID) {
-                                ForEach(model.windows, id: \.windowID) { w in
-                                    let name = w.owningApplication?.applicationName ?? L10n.tr("window.app_fallback")
-                                    let title = (w.title?.isEmpty == false) ? w.title! : L10n.tr("window.untitled")
-                                    Text("\(name) — \(title)").tag(Optional(w.windowID))
-                                }
-                            }
-                            .frame(minWidth: 320)
-                        }
-                    case .display:
-                        if model.displays.isEmpty {
-                            Text(L10n.tr("source.empty.displays"))
-                                .foregroundStyle(.secondary)
-                        } else {
-                            Picker(L10n.tr("picker.display"), selection: $model.selectedDisplayID) {
-                                ForEach(model.displays, id: \.displayID) { d in
-                                    Text(displayLabel(d)).tag(Optional(d.displayID))
-                                }
-                            }
-                        }
+                    } else {
+                        windowPicker
                     }
-
-                    Button(L10n.tr("source.refresh")) {
-                        Task { await model.refreshShareableContent() }
+                case .display:
+                    if model.displays.isEmpty {
+                        Text(L10n.tr("source.empty.displays"))
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    } else {
+                        displayPicker
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
 
-            GroupBox(L10n.tr("export.group")) {
+                Button(L10n.tr("source.refresh")) {
+                    Task { await model.refreshShareableContent() }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private var sourceTypePicker: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(L10n.tr("picker.type"))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            Picker(L10n.tr("picker.type"), selection: $model.sourceKind) {
+                ForEach(CaptureSourceKind.allCases) { k in
+                    Text(k.title).tag(k)
+                }
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private var windowPicker: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(L10n.tr("picker.window"))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            Picker(L10n.tr("picker.window"), selection: $model.selectedWindowID) {
+                ForEach(model.windows, id: \.windowID) { w in
+                    let name = w.owningApplication?.applicationName ?? L10n.tr("window.app_fallback")
+                    let title = (w.title?.isEmpty == false) ? w.title! : L10n.tr("window.untitled")
+                    Text("\(name) — \(title)").tag(Optional(w.windowID))
+                }
+            }
+            .labelsHidden()
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private var displayPicker: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(L10n.tr("picker.display"))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            Picker(L10n.tr("picker.display"), selection: $model.selectedDisplayID) {
+                ForEach(model.displays, id: \.displayID) { d in
+                    Text(displayLabel(d)).tag(Optional(d.displayID))
+                }
+            }
+            .labelsHidden()
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private var exportSection: some View {
+        GroupBox(L10n.tr("export.group")) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L10n.tr("export.format"))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
                 Picker(L10n.tr("export.format"), selection: $model.exportFormat) {
                     ForEach(AudioExportFormat.allCases) { f in
                         Text(f.title).tag(f)
@@ -73,134 +137,190 @@ struct ContentView: View {
                 .labelsHidden()
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+        }
+    }
 
-            GroupBox(L10n.tr("save.group")) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(model.recordingsFolderSummary)
+    private var saveSection: some View {
+        GroupBox(L10n.tr("save.group")) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(model.recordingsFolderSummary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .textSelection(.enabled)
+                Text(L10n.tr("save.hint"))
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    private var controlSection: some View {
+        GroupBox(L10n.tr("control.group")) {
+            VStack(alignment: .leading, spacing: 12) {
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 12) {
+                        recordToggleButton
+                        stopButton
+                    }
+                    VStack(alignment: .leading, spacing: 8) {
+                        recordToggleButton
+                        stopButton
+                    }
+                }
+
+                recordingTimeline
+            }
+        }
+    }
+
+    private var recordToggleButton: some View {
+        Button(action: { model.toggleRecord() }) {
+            Label(
+                model.isPreparingRecording
+                    ? L10n.tr("record.preparing")
+                    : (model.phase == .paused ? L10n.tr("record.resume") : (model.phase == .recording ? L10n.tr("record.pause") : L10n.tr("record.start"))),
+                systemImage: model.phase == .recording ? "pause.fill" : "record.circle"
+            )
+        }
+        .keyboardShortcut("r", modifiers: [.command])
+        .disabled(model.phase == .stopping || model.isPreparingRecording)
+    }
+
+    private var stopButton: some View {
+        Button(L10n.tr("record.stop")) {
+            model.stop()
+        }
+        .keyboardShortcut(".", modifiers: [.command])
+        .disabled(model.phase != .recording && model.phase != .paused)
+    }
+
+    private var playbackSection: some View {
+        GroupBox(L10n.tr("playback.group")) {
+            VStack(alignment: .leading, spacing: 10) {
+                playbackPrimaryControls
+                playbackSecondaryControls
+                playbackTimeline
+
+                if let path = model.lastRecordingURL?.path {
+                    Text(L10n.tr("recent.file", path))
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
                         .textSelection(.enabled)
-                    Text(L10n.tr("save.hint"))
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
                 }
+                Text(L10n.tr("playback.shortcuts.hint"))
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-
-            GroupBox(L10n.tr("control.group")) {
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(spacing: 12) {
-                        Button(action: { model.toggleRecord() }) {
-                            Label(
-                                model.isPreparingRecording
-                                    ? L10n.tr("record.preparing")
-                                    : (model.phase == .paused ? L10n.tr("record.resume") : (model.phase == .recording ? L10n.tr("record.pause") : L10n.tr("record.start"))),
-                                systemImage: model.phase == .recording ? "pause.fill" : "record.circle"
-                            )
-                        }
-                        .keyboardShortcut("r", modifiers: [.command])
-                        .disabled(model.phase == .stopping || model.isPreparingRecording)
-
-                        Button(L10n.tr("record.stop")) {
-                            model.stop()
-                        }
-                        .keyboardShortcut(".", modifiers: [.command])
-                        .disabled(model.phase != .recording && model.phase != .paused)
-                    }
-
-                    recordingTimeline
-                }
-            }
-
-            GroupBox(L10n.tr("playback.group")) {
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack(spacing: 10) {
-                        Button {
-                            model.pickPlaybackFile()
-                        } label: {
-                            Label(L10n.tr("playback.choose_file"), systemImage: "folder")
-                        }
-                        .help(L10n.tr("playback.help.open_file"))
-
-                        Button {
-                            model.playbackPlay()
-                        } label: {
-                            Label(L10n.tr("playback.play"), systemImage: "play.fill")
-                        }
-                        .disabled(!model.hasPlaybackSource || model.isPlaying)
-                        .keyboardShortcut(.return, modifiers: [.command])
-                        .help(L10n.tr("playback.help.play"))
-
-                        Button {
-                            model.playbackPause()
-                        } label: {
-                            Label(L10n.tr("playback.pause"), systemImage: "pause.fill")
-                        }
-                        .disabled(!model.isPlaying)
-                        .keyboardShortcut(KeyEquivalent("/"), modifiers: [.command])
-                        .help(L10n.tr("playback.help.pause"))
-
-                        Button {
-                            model.stopPlayback()
-                        } label: {
-                            Label(L10n.tr("playback.stop"), systemImage: "stop.fill")
-                        }
-                        .disabled(!model.canStopPlayback)
-                        .keyboardShortcut("s", modifiers: [.command, .shift])
-                        .help(L10n.tr("playback.help.stop"))
-                    }
-
-                    HStack(spacing: 10) {
-                        Button {
-                            model.playbackTogglePlayPause()
-                        } label: {
-                            Label(
-                                model.isPlaying ? L10n.tr("playback.toggle_pause") : L10n.tr("playback.toggle_play"),
-                                systemImage: model.isPlaying ? "pause.circle.fill" : "play.circle.fill"
-                            )
-                        }
-                        .disabled(!model.hasPlaybackSource)
-                        .keyboardShortcut(.space, modifiers: [])
-                        .help(L10n.tr("playback.help.space"))
-
-                        Button(L10n.tr("playback.reveal")) {
-                            model.revealRecordingInFinder()
-                        }
-                        Button(L10n.tr("playback.open_folder")) {
-                            model.openAppRecordingsFolderInFinder()
-                        }
-                        Button(L10n.tr("playback.copy_path")) {
-                            model.copyLastRecordingPathToPasteboard()
-                        }
-                    }
-
-                    playbackTimeline
-
-                    if let path = model.lastRecordingURL?.path {
-                        Text(L10n.tr("recent.file", path))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(4)
-                            .textSelection(.enabled)
-                    }
-                    Text(L10n.tr("playback.shortcuts.hint"))
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
-                }
-            }
-
-            Text(model.statusMessage)
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            Spacer(minLength: 0)
         }
-        .padding(20)
-        .frame(minWidth: 520, minHeight: 540)
-        .task {
-            await model.refreshShareableContent()
+    }
+
+    private var playbackPrimaryControls: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) {
+                chooseFileButton
+                playButton
+                pausePlaybackButton
+                stopPlaybackButton
+            }
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 10) {
+                    chooseFileButton
+                    playButton
+                }
+                HStack(spacing: 10) {
+                    pausePlaybackButton
+                    stopPlaybackButton
+                }
+            }
         }
+    }
+
+    private var playbackSecondaryControls: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) {
+                togglePlayPauseButton
+                revealButton
+                openFolderButton
+                copyPathButton
+            }
+            VStack(alignment: .leading, spacing: 8) {
+                togglePlayPauseButton
+                HStack(spacing: 10) {
+                    revealButton
+                    openFolderButton
+                }
+                copyPathButton
+            }
+        }
+    }
+
+    private var chooseFileButton: some View {
+        Button { model.pickPlaybackFile() } label: {
+            Label(L10n.tr("playback.choose_file"), systemImage: "folder")
+        }
+        .help(L10n.tr("playback.help.open_file"))
+    }
+
+    private var playButton: some View {
+        Button { model.playbackPlay() } label: {
+            Label(L10n.tr("playback.play"), systemImage: "play.fill")
+        }
+        .disabled(!model.hasPlaybackSource || model.isPlaying)
+        .keyboardShortcut(.return, modifiers: [.command])
+        .help(L10n.tr("playback.help.play"))
+    }
+
+    private var pausePlaybackButton: some View {
+        Button { model.playbackPause() } label: {
+            Label(L10n.tr("playback.pause"), systemImage: "pause.fill")
+        }
+        .disabled(!model.isPlaying)
+        .keyboardShortcut(KeyEquivalent("/"), modifiers: [.command])
+        .help(L10n.tr("playback.help.pause"))
+    }
+
+    private var stopPlaybackButton: some View {
+        Button { model.stopPlayback() } label: {
+            Label(L10n.tr("playback.stop"), systemImage: "stop.fill")
+        }
+        .disabled(!model.canStopPlayback)
+        .keyboardShortcut("s", modifiers: [.command, .shift])
+        .help(L10n.tr("playback.help.stop"))
+    }
+
+    private var togglePlayPauseButton: some View {
+        Button { model.playbackTogglePlayPause() } label: {
+            Label(
+                model.isPlaying ? L10n.tr("playback.toggle_pause") : L10n.tr("playback.toggle_play"),
+                systemImage: model.isPlaying ? "pause.circle.fill" : "play.circle.fill"
+            )
+        }
+        .disabled(!model.hasPlaybackSource)
+        .keyboardShortcut(.space, modifiers: [])
+        .help(L10n.tr("playback.help.space"))
+    }
+
+    private var revealButton: some View {
+        Button(L10n.tr("playback.reveal")) { model.revealRecordingInFinder() }
+    }
+
+    private var openFolderButton: some View {
+        Button(L10n.tr("playback.open_folder")) { model.openAppRecordingsFolderInFinder() }
+    }
+
+    private var copyPathButton: some View {
+        Button(L10n.tr("playback.copy_path")) { model.copyLastRecordingPathToPasteboard() }
+    }
+
+    private func displayLabel(_ d: SCDisplay) -> String {
+        let w = Int(d.width)
+        let h = Int(d.height)
+        return L10n.tr("display.label", UInt(d.displayID), w, h)
     }
 
     private var recordingTimelineIcon: String {
@@ -212,41 +332,18 @@ struct ContentView: View {
         }
     }
 
-    private func displayLabel(_ d: SCDisplay) -> String {
-        let w = Int(d.width)
-        let h = Int(d.height)
-        return L10n.tr("display.label", UInt(d.displayID), w, h)
-    }
-
     private var recordingTimeline: some View {
         let active = model.phase == .recording || model.phase == .paused || model.phase == .stopping
         let elapsed = model.recordingElapsed
         let level = CGFloat(model.recordingLevel)
 
         return VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 8) {
-                Image(systemName: recordingTimelineIcon)
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(active ? Color.red : Color.secondary)
-                Text(TimeFormatting.mmss(elapsed))
-                    .font(.system(.title3, design: .monospaced))
-                    .foregroundStyle(active ? Color.primary : Color.secondary)
-                if active, model.phase != .paused {
-                    Text(L10n.tr("meter.input_level"))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text("\(Int((model.recordingLevel * 100).rounded()))%")
-                        .font(.caption.monospacedDigit())
-                        .foregroundStyle(.secondary)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    recordingStatusLeading(active: active, elapsed: elapsed)
                 }
-                if model.phase == .paused {
-                    Text(L10n.tr("meter.paused"))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                } else if !active {
-                    Text(L10n.tr("meter.idle"))
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
+                VStack(alignment: .leading, spacing: 4) {
+                    recordingStatusLeading(active: active, elapsed: elapsed)
                 }
             }
 
@@ -272,6 +369,35 @@ struct ContentView: View {
             Text(L10n.tr("meter.hint"))
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    @ViewBuilder
+    private func recordingStatusLeading(active: Bool, elapsed: TimeInterval) -> some View {
+        Image(systemName: recordingTimelineIcon)
+            .symbolRenderingMode(.hierarchical)
+            .foregroundStyle(active ? Color.red : Color.secondary)
+        Text(TimeFormatting.mmss(elapsed))
+            .font(.system(.title3, design: .monospaced))
+            .foregroundStyle(active ? Color.primary : Color.secondary)
+        if active, model.phase != .paused {
+            Text(L10n.tr("meter.input_level"))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("\(Int((model.recordingLevel * 100).rounded()))%")
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+        }
+        if model.phase == .paused {
+            Text(L10n.tr("meter.paused"))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        } else if !active {
+            Text(L10n.tr("meter.idle"))
+                .font(.caption)
+                .foregroundStyle(.tertiary)
         }
     }
 
@@ -283,7 +409,7 @@ struct ContentView: View {
             HStack {
                 Text(TimeFormatting.hmmss(model.playbackCurrentTime))
                     .font(.system(.body, design: .monospaced))
-                Spacer()
+                Spacer(minLength: 8)
                 Text(TimeFormatting.hmmss(model.playbackDuration))
                     .font(.system(.body, design: .monospaced))
                     .foregroundStyle(.secondary)
@@ -304,6 +430,7 @@ struct ContentView: View {
             Text(L10n.tr("playback.slider.hint"))
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }

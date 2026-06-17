@@ -3301,6 +3301,26 @@
         }
       },
       "extractionState": "manual"
+    },
+    "help.menu.guide": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "ScreenVoiceRec User Guide" } },
+        "en-CA": { "stringUnit": { "state": "translated", "value": "ScreenVoiceRec User Guide" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Guide d’utilisation ScreenVoiceRec" } },
+        "fr-CA": { "stringUnit": { "state": "translated", "value": "Guide d’utilisation ScreenVoiceRec" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "ScreenVoiceRec 使用帮助" } }
+      }
+    },
+    "help.menu.support": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Support & Contact" } },
+        "en-CA": { "stringUnit": { "state": "translated", "value": "Support & Contact" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Assistance et contact" } },
+        "fr-CA": { "stringUnit": { "state": "translated", "value": "Assistance et contact" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "支持与联系" } }
+      }
     }
   },
   "version": "1.0"
